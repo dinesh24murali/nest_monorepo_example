@@ -1,0 +1,13 @@
+notes
+Dockerfile
+.dockerignore
+.git
+.gitignore
+docker-compose*
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

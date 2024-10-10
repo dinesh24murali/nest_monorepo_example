@@ -1,0 +1,20 @@
+{
+  "name": "@ct-pod/kafka-connect",
+  "version": "1.0.0",
+  "license": "MIT",
+  "engines": {
+    "node": "20.15.1",
+    "npm": "10.7.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start:prod": "node ./dist/index.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "@types/node": "^22.7.5",
+    "kafkajs": "^2.2.4",
+    "typescript": "^5.6.2"
+  }
+}

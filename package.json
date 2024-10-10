@@ -1,0 +1,15 @@
+{
+  "name": "ct-pod",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "kafka": "yarn workspace @ct-pod/kafka-connect",
+    "api": "yarn workspace @ct-pod/api"
+  },
+  "packageManager": "yarn@4.5.0"
+}
