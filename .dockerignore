@@ -4,10 +4,4 @@ Dockerfile
 .git
 .gitignore
 docker-compose*
-.yarn/*
-!.yarn/cache
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
+.yarn

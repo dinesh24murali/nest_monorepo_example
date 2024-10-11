@@ -17,27 +17,27 @@ COPY packages/kafka-connect/dist ./packages/kafka-connect/dist
 
 # Copy only the Yarn configuration files and workspaces first
 COPY package.json yarn.lock .yarnrc.yml ./
-COPY .yarn/ .yarn/
-COPY .pnp.cjs .pnp.loader.mjs ./
 
 # Install app dependencies
-RUN yarn install --immutable
+RUN yarn workspaces focus @ct-pod/api --production
 
 COPY . .
 
-RUN yarn api build
+RUN yarn workspace @ct-pod/api build
 
 FROM node:20-alpine
 
 RUN corepack enable
 
+WORKDIR /app
+
 RUN mkdir -p ./packages/api
+RUN mkdir -p ./packages/kafka-connect
 
 COPY --from=builder /app/.yarn ./.yarn
-COPY --from=builder /app/packages/api/package.json ./packages/api
-COPY --from=builder /app/packages/api/dist ./packages/api/dist
+COPY --from=builder /app/.pnp.cjs /app/.pnp.loader.mjs /app/package.json /app/yarn.lock /app/.yarnrc.yml ./
 
-COPY --from=builder /app/package.json ./
+COPY --from=builder /app/packages ./packages/
 
 EXPOSE 3000
 
