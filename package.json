@@ -5,11 +5,13 @@
   "main": "index.js",
   "license": "MIT",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "libs/*"
   ],
   "scripts": {
     "kafka": "yarn workspace @ct-pod/kafka-connect",
-    "api": "yarn workspace @ct-pod/api"
+    "api": "yarn workspace @ct-pod/api",
+    "dal": "yarn workspace @ct-pod/dal"
   },
   "packageManager": "yarn@4.5.0"
 }

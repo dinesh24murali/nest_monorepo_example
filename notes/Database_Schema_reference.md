@@ -54,10 +54,11 @@ CREATE TABLE Pods (
     ModelNumber varchar(255),
     Status varchar(255), -- active or inactive
     StationId varchar(255), -- wont be used for private owner
-    range int, -- need to confirm whether to put range or charge percent
-    PodTerms varchar(255),
-    Latitude int,
+    Charge int, -- need to confirm whether to put range or charge percent
+    PodTerms varchar(255), -- private owner terms
+    Latitude int, -- used to track the current location of the pod, even if it is in a active trip
     Longitudes int,
+    PRIMARY KEY (PodId),
     FOREIGN KEY (StationId) REFERENCES Stations(StationId),
 );
 CREATE TABLE PodReviews(
@@ -66,6 +67,7 @@ CREATE TABLE PodReviews(
     UserId varchar(255),
     Rating int,
     Description varchar(255),
+    PRIMARY KEY (Id),
     FOREIGN KEY (PodId) REFERENCES Pods(PodId),
     FOREIGN KEY (UserId) REFERENCES Users(UserId),
 );
@@ -76,31 +78,49 @@ CREATE TABLE UserPods (
     UserId Date,
     RelationshipType varchar(255), -- owned or private rider
     Status varchar(255),
+    PRIMARY KEY (PodRelationshipId),
     FOREIGN KEY (PodId) REFERENCES Pods(PodId),
     FOREIGN KEY (UserId) REFERENCES Users(UserId),
 );
 CREATE TABLE Notifications (
     NotificationId varchar(255),
     NotificationType varchar(255),
-    Title varchar(255),
-    TitleReplacements Object,
+    Title varchar(255), -- will use TitleReplacementsNotification table as well 
     date Date,
     UserId varchar(255),
     IsRead boolean,
+    PRIMARY KEY (NotificationId),
     FOREIGN KEY (UserId) REFERENCES Users(UserId),
 );
 CREATE TABLE Coupons(
     CouponId varchar(255),
-    Title varchar(255),
-    TitleReplacements Object,
+    Title varchar(255), -- will use TitleReplacementsCoupon table as well 
     CouponType varchar(255),
     CouponCode varchar(255),
+    PRIMARY KEY (CouponId),
+);
+CREATE TABLE TitleReplacementsNotification(
+    Id varchar(255),
+    NotificationId varchar(255),
+    TitleKey varchar(255),
+    TitleValue varchar(255),
+    PRIMARY KEY (Id),
+    FOREIGN KEY (NotificationId) REFERENCES Notifications(NotificationId),
+);
+CREATE TABLE TitleReplacementsCoupon(
+    Id varchar(255),
+    CouponId varchar(255),
+    TitleKey varchar(255),
+    TitleValue varchar(255),
+    PRIMARY KEY (Id),
+    FOREIGN KEY (CouponId) REFERENCES Coupons(CouponId),
 );
 CREATE TABLE UserCoupons(
     CouponRelationshipId varchar(255),
     UserId  varchar(255),
     CouponId  varchar(255),
     DateAssigned Date,
+    PRIMARY KEY (CouponRelationshipId),
     FOREIGN KEY (UserId) REFERENCES Users(UserId),
     FOREIGN KEY (CouponId) REFERENCES Coupons(CouponId),
 );
@@ -120,14 +140,15 @@ CREATE TABLE Trips(
     EndDate Date,
     StartLatitude int, -- If dropped at users location
     StartLongitudes int,
-    EndLatitude int, -- Needed if trip status is CancelledSupport
+    EndLatitude int, -- Needed if trip status is CancelledSupport or Abandoned
     EndLongitudes int,
     NoOfPauses int,
     StopId varchar(255),
     InsuranceId varchar(255),
     TripRating int,
     RatingDescription varchar(255),
-    Status varchar(50), -- Pending, Cancelled, Ongoing, CancelledSupport, Completed
+    Status varchar(50), -- Pending, Cancelled, Ongoing, CancelledSupport, Completed, or Abandoned
+    PRIMARY KEY (TripId),
     FOREIGN KEY (UserId) REFERENCES Users(UserId),
     FOREIGN KEY (PodId) REFERENCES Pods(PodId),
     FOREIGN KEY (StartStationId) REFERENCES Stations(StationId),
@@ -146,6 +167,7 @@ CREATE TABLE Payments(
     PaymentMethod int, -- will add more fields based on integration
     PaymentType int, -- payment or refund
     createdDate Date,
+    PRIMARY KEY (Id),
     FOREIGN KEY (TripId) REFERENCES Trips(TripId),
 );
 CREATE TABLE ExtendTrip(
@@ -160,6 +182,7 @@ CREATE TABLE ExtendTrip(
     EndStationName varchar(255), -- optional
     StartStationId varchar(255), -- optional
     EndStationId varchar(255), -- optional
+    PRIMARY KEY (ExtendTripId),
     FOREIGN KEY (TripId) REFERENCES Trips(TripId),
 );
 CREATE TABLE Stops(
@@ -168,6 +191,7 @@ CREATE TABLE Stops(
     Latitude int,
     Longitudes int,
     Address varchar(255),
+    PRIMARY KEY (StopId),
 );
 CREATE TABLE PickUpDropRequests(
     Id varchar(255),
@@ -178,6 +202,7 @@ CREATE TABLE PickUpDropRequests(
     Latitude int,
     Longitudes int,
     Address varchar(255),
+    PRIMARY KEY (Id),
     FOREIGN KEY (UserId) REFERENCES Users(UserId),
     FOREIGN KEY (PodId) REFERENCES Pods(PodId),
     FOREIGN KEY (TripId) REFERENCES Trips(TripId),
@@ -188,10 +213,14 @@ CREATE TABLE Stations(
     Name varchar(255),
     Latitude int,
     Longitudes int,
+    StationType varchar(50), -- only charging station or charging and pick up station or pick up station
+    PRIMARY KEY (StationId),
 );
 CREATE TABLE WalletHistory(
+    Id varchar(255),
     date Date,
     Amount int,
+    PRIMARY KEY (Id),
     FOREIGN KEY (UserId) REFERENCES Users(UserId),
 );
 CREATE TABLE Insurance(
@@ -202,6 +231,7 @@ CREATE TABLE Insurance(
     Cost int,
     DocumentUrl varchar(255),
     CoverageDetails varchar(255),
+    PRIMARY KEY (Id),
 );
 CREATE TABLE UserRelationships(
     Id varchar(255),
@@ -209,6 +239,7 @@ CREATE TABLE UserRelationships(
     RiderId varchar(255),
     FOREIGN KEY (OwnerId) REFERENCES Users(UserId),
     FOREIGN KEY (RiderId) REFERENCES Users(UserId),
+    PRIMARY KEY (Id),
 );
 ```
 

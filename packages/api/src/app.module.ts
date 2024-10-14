@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { SharedModule } from './app/shared/shared.module';
 
 @Module({
-  imports: [],
+  imports: [SharedModule, ConfigModule.forRoot()],
   controllers: [AppController],
   providers: [AppService],
 })

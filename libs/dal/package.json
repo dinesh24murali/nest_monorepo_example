@@ -1,20 +1,29 @@
 {
-  "name": "@ct-pod/kafka-connect",
+  "name": "@ct-pod/dal",
   "version": "1.0.0",
   "license": "MIT",
+  "private": true,
   "engines": {
     "node": "20.15.1",
     "npm": "10.7.0"
   },
   "scripts": {
     "build": "tsc",
+    "build:watch": "tsc -p tsconfig.json -w",
     "start:prod": "node ./dist/index.js"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "peerDependencies": {
+    "@nestjs/common": "10.4.4"
+  },
   "dependencies": {
     "@types/node": "^22.7.5",
-    "kafkajs": "^2.2.4",
-    "typescript": "^5.6.2"
+    "mongoose": "^8.7.1",
+    "typescript": "5.6.2",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^10"
   }
 }
