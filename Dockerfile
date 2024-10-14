@@ -12,25 +12,33 @@ RUN mkdir -p ./libs/
 # as a dependency we have to copy both the project's package.json files
 COPY packages/api/package.json ./packages/api/
 
-COPY libs/kafka-connect/package.json ./libs/kafka-connect/
-COPY libs/kafka-connect/dist ./libs/kafka-connect/dist
-COPY libs/dal/package.json ./libs/dal/
-COPY libs/dal/dist ./libs/dal/dist
+COPY libs/ ./libs/
+# COPY libs/kafka-connect/package.json ./libs/kafka-connect/
+# COPY libs/kafka-connect/dist ./libs/kafka-connect/dist
+# COPY libs/dal/package.json ./libs/dal/
+# COPY libs/dal/dist ./libs/dal/dist
 
 # Copy only the Yarn configuration files and workspaces first
 COPY package.json yarn.lock .yarnrc.yml ./
 
 # Install app dependencies
+RUN yarn workspaces focus @ct-pod/dal --production
+# Install app dependencies
+RUN yarn workspaces focus @ct-pod/kafka-connect --production
+# Install app dependencies
 RUN yarn workspaces focus @ct-pod/api --production
 
 COPY . .
+
+RUN yarn workspace @ct-pod/dal build
+
+RUN yarn workspace @ct-pod/kafka-connect build
 
 RUN yarn workspace @ct-pod/api build
 
 FROM node:20-alpine
 
 RUN corepack enable
-
 WORKDIR /app
 
 # RUN mkdir -p ./packages/api
