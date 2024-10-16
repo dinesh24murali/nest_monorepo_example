@@ -1,5 +1,5 @@
 
-List of entities
+# List of entities
 
 User
 ? UserInvites - we could add this to `UserPod` table and add a status
@@ -27,9 +27,7 @@ OfferManagement
 UserRelationships
  - private rider, private owner relationship
 
-What can the user do?
 
-User
 ```SQL
 CREATE TABLE Users (
     UserId varchar(255),

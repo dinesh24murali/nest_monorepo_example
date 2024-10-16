@@ -19,6 +19,7 @@ export interface UserEntity {
   currency: string;
   createdAt: Date;
   updatedAt: Date;
+  refreshToken: string;
 }
 
 export type UserDBModel = UserEntity;

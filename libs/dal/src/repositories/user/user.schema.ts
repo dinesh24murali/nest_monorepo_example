@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { model, models, Model, Schema } from 'mongoose';
 
 import { schemaOptions } from '../schema-default.options';
 import { UserDBModel } from './user.entity';
@@ -18,10 +18,11 @@ const userSchema = new Schema<UserDBModel>(
         status: Types.String,
         walletBalance: Types.Decimal128,
         currency: Types.String,
+        refreshToken: Types.String,
         createdAt: Types.Date,
         updatedAt: Types.Date,
     },
     schemaOptions,
 );
 
-export const User = model<UserDBModel>('User', userSchema);
+export const User = (models.User as Model<UserDBModel>) || model<UserDBModel>('User', userSchema);
